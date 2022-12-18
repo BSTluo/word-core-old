@@ -1,11 +1,13 @@
 import Editor from './Editor/index'
 import Driver from './Driver'
-import fs from 'fs'
-import path from 'path'
+import Permissions from './Permissions'
+import * as fs from 'fs'
+import * as path from 'path'
 import { config } from './Function/Config/conventional'
 
 const dir = config.dir
 export const editor = new Editor(dir)
+export const permissions = new Permissions(dir)
 
 const cacheObj = editor.getCacheWord()
 
