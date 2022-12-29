@@ -238,8 +238,14 @@ export default class {
    */
   killList (dbName: string) {
     if (this.wordObj.wordList.indexOf(dbName) === -1) { return ' [词库核心] 此词库不存在' }
+    const time = new Date()
+          
     try {
-      fs.renameSync(path.join(wordDir, `word/wordList/${dbName}.json`), path.join(wordDir, `word/recycleBin/${dbName}.json`))
+      const userData = fs.readdirSync(path.join(wordDir, './word/recycleBin'))
+      let newName = dbName.repeat(1)
+      if (userData.includes(`${dbName}.json`)) { newName = `${newName}_bak`}
+
+      fs.renameSync(path.join(wordDir, `word/wordList/${dbName}.json`), path.join(wordDir, `word/recycleBin/${newName}.json`))
       this.wordObj = this.getCacheWord()
 
       return ' [词库核心] 移动至回收站成功'
@@ -363,10 +369,28 @@ export default class {
    */
   viewWriter (dbName: string) {
     const word = getjson('wordList', dbName)
-    if (!word.author) { return 0 }
+    if (!word.author) { return null }
 
     return word.author
   } // 谁是编写者(这边不封装，后期为花园手动封装)
+
+  /**
+   * 判断对方是否为作者
+   * @param id 寻找id
+   * @param dbname 词库名
+   * @returns true/false
+   */
+  isWriter (id: string) {
+    const dbName = getPointer(id)
+    const adminList = this.viewWriter(dbName)
+    if (!adminList) return ' [词库核心] isWriter出现异常'
+
+    if (adminList.includes(id)) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   /**
    * 设定背包清单值
@@ -522,5 +546,10 @@ export default class {
     function: { // js代码 }
   }
 */
-
+/*
+{
+  存储库: {},
+  存储库2:{}
+}
+*/
 // Driver文件夹下有配置主动触发函数的文件 467
