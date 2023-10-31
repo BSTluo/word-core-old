@@ -98,7 +98,7 @@ export default class {
     this.wordObj = this.getCacheWord()// 此处可选优化，手动添加到缓存，而不是刷新缓存，下方的以此类推
     return feedback
   }
-  
+
   /**
    * 删除问答
    * @param q 触发词
@@ -133,7 +133,7 @@ export default class {
    * @param id 查询者id
    * @returns 结果
    */
-  list (q: string, id:string) {
+  list (q: string, id: string) {
     const pointer = getPointer(id)
     const word = getjson('wordList', pointer)
     let out = ''
@@ -141,14 +141,14 @@ export default class {
 
     if (!word.main[q]) { return ' [词库核心] 当前词库不存在您要删除的问答' }
 
-    word.main[q].forEach(element => {
+    word.main[q].forEach((element:string) => {
       i++
       out = out + `\n ${i}. ${element}`
     })
 
     return ` [词库核心] 该词库含有：${out}`
   }
-  
+
   /**
    * 寻找触发词
    * @param q 所寻找的触发词(正则字符串)
@@ -238,12 +238,11 @@ export default class {
    */
   killList (dbName: string) {
     if (this.wordObj.wordList.indexOf(dbName) === -1) { return ' [词库核心] 此词库不存在' }
-    const time = new Date()
-          
+
     try {
       const userData = fs.readdirSync(path.join(wordDir, './word/recycleBin'))
       let newName = dbName.repeat(1)
-      if (userData.includes(`${dbName}.json`)) { newName = `${newName}_bak`}
+      if (userData.includes(`${dbName}.json`)) { newName = `${newName}_bak` }
 
       fs.renameSync(path.join(wordDir, `word/wordList/${dbName}.json`), path.join(wordDir, `word/recycleBin/${newName}.json`))
       this.wordObj = this.getCacheWord()
@@ -506,7 +505,7 @@ export default class {
     const pointer = getPointer(id)
     const word = getjson('wordList', pointer)
 
-    if (word.author[0] !== id) { return }
+    if (word.author[0] !== id) { return ' [词库核心] 您不是第一作者，无法修改' }
 
     word.cache = newCacheName
 

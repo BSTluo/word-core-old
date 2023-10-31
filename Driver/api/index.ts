@@ -144,6 +144,7 @@ export const interpreter = (inData: string, playData: { [key: string]: string })
     }
     return outArr
   } catch (err: any) {
+    console.log(err)
     return `[Word-Driver] ${err.message}`
   }
 }
@@ -173,4 +174,8 @@ const ArrayInterpreter = (needInterpreterArr: any[], playData: { [key: string]: 
 
 export const next = () => {
   return new Error('[Word-Driver] next')
+}
+
+export const error = (text: string) => {
+  return new Error(`[Word-Driver] error ${text}`)
 }
